@@ -9,12 +9,6 @@ import (
 	"time"
 )
 
-var root = "."
-var walkDone = false
-var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
-var memprofile = flag.String("memprofile", "", "write memory profile to this file")
-var profiled = false
-
 // this file contains the frontend code for the gack utility
 
 func init() {
@@ -32,6 +26,8 @@ func main() {
 		fmt.Println("[!] ", err)
 		os.Exit(1)
 	}
+
+        fmt.Println("[-] query: ", query)
 	if profiled {
 		fmt.Println("[+] profiling enabled")
 	}
@@ -64,7 +60,11 @@ func main() {
 		time.Sleep(1 * time.Millisecond)
 	}
 	close(resultChannel)
+        if profiled {
+                killProfile()
+        }
 
+        os.Exit(exitStatus)
 }
 
 func usage() {
@@ -85,7 +85,7 @@ func configure() (err error) {
 	} else if configFilesOnly {
 		query = regexp.MustCompile(".*")
 	} else if !configFilesOnly {
-		query, err = regexp.Compile(os.Args[1])
+		query = regexp.MustCompile(flag.Args()[0])
 	}
 
 	initProfile()
@@ -93,15 +93,16 @@ func configure() (err error) {
 }
 
 func parseResults() {
-	results := 0
-
 	for !walkDone || len(resultChannel) > 0 || len(fileChannel) > 0 {
 		res, ok := <-resultChannel
 		if !ok {
 			break
 		}
 
-		results++
+                if exitStatus == 1 {
+                        exitStatus = 0
+                }
+
 		fmt.Println(res.Path)
 		for _, line := range res.Results {
 			fmt.Printf("%d:%s\n", line.Lineno, line.Line)
@@ -109,14 +110,5 @@ func parseResults() {
 		if len(res.Results) > 0 {
 			fmt.Println("")
 		}
-	}
-
-	if profiled {
-		killProfile()
-	}
-	if results == 0 {
-		os.Exit(1)
-	} else {
-		os.Exit(0)
 	}
 }

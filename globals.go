@@ -7,6 +7,7 @@ import (
 
 var query *regexp.Regexp
 var root = "."
+var exitStatus = 1
 var walkDone = false
 
 // profile vars
