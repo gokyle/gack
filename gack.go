@@ -25,16 +25,10 @@ func shouldIgnoreFile(path string) bool {
 		}
 	}
 
-	keep := false
-
 	for _, langRegex := range language_files {
 		if matched := langRegex.MatchString(basename); matched {
-			keep = true
-			break
+			return false
 		}
-	}
-	if keep {
-		return false
 	}
 	return true
 }
