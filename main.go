@@ -27,7 +27,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("[-] query: ", query)
 	if profiled {
 		fmt.Println("[+] profiling enabled")
 	}
