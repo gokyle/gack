@@ -2,6 +2,7 @@ package main
 
 // constants and globals for the gack utility
 import (
+	"flag"
 	"regexp"
 )
 
@@ -51,7 +52,6 @@ var language_files map[string]*regexp.Regexp
 // config vars
 var configFilesOnly bool
 var configFilesOnlyRegex string
-
 
 // types
 

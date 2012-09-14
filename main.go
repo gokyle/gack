@@ -27,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-        fmt.Println("[-] query: ", query)
+	fmt.Println("[-] query: ", query)
 	if profiled {
 		fmt.Println("[+] profiling enabled")
 	}
@@ -60,11 +60,11 @@ func main() {
 		time.Sleep(1 * time.Millisecond)
 	}
 	close(resultChannel)
-        if profiled {
-                killProfile()
-        }
+	if profiled {
+		killProfile()
+	}
 
-        os.Exit(exitStatus)
+	os.Exit(exitStatus)
 }
 
 func usage() {
@@ -99,9 +99,9 @@ func parseResults() {
 			break
 		}
 
-                if exitStatus == 1 {
-                        exitStatus = 0
-                }
+		if exitStatus == 1 {
+			exitStatus = 0
+		}
 
 		fmt.Println(res.Path)
 		for _, line := range res.Results {
