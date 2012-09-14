@@ -53,5 +53,5 @@ var language_files map[string][]*regexp.Regexp
 
 // config vars
 var configFilesOnly bool
-var configFileRegex *regexp.Regexp
+var configFilesOnlyRegex string
 

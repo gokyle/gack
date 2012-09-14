@@ -2,6 +2,7 @@ package main
 
 import (
         "fmt"
+        "os"
         "regexp"
 )
 
@@ -10,11 +11,13 @@ import (
 func addExtension(regex, ext string) string {
         if len(regex) > 0 {
                 regex += "|"
+        }
         re_string := fmt.Sprintf("(^[.].*\\w+[.]%s$)", ext)
         return regex + re_string
 }
 
 func buildLanguageExtensions(exts []string) *regexp.Regexp {
+        var regex string
         for _, ext := range exts {
                 regex = addExtension(regex, ext)
         }

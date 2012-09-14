@@ -1,6 +1,7 @@
 package main
 
 import (
+        "flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -15,7 +16,6 @@ var root = "."
 func init() {
         fileChannel = make(chan string, fileMax)
         resultChannel = make(chan *Result, fileMax)
-        config = make(map[string]interface{}, 0)
 }
 
 func main() {
@@ -53,29 +53,21 @@ func usage() {
 }
 
 func configure() (err error) {
-        for i, flag := range os.Args {
-                if flag[0] != '-' {
-                        continue
-                }
+        flag.BoolVar(&configFilesOnly, "f", false,
+                "Only list source files.")
+        flag.StringVar(&configFilesOnlyRegex, "g", "",
+                "Only list source files that match the specified regex.")
+        flag.Parse()
 
-                switch flag {
-                case "-f":
-                        configFilesOnly = true
-                        query, err = regexp.Compile(".*")
-                case "-g":
-                        configFilesOnly = true
-                        query, err = regexp.Compile(os.Args[i+1])
-                default:
-                }
-
-                if err != nil {
-                        break
-                }
-        }
-
-        if !configFilesOnly {
+        if configFilesOnlyRegex != "" {
+                query = regexp.MustCompile(configFilesOnlyRegex)
+                configFilesOnly = true
+        } else if configFilesOnly {
+                query = regexp.MustCompile(".*") 
+        } else if !configFilesOnly {
                 query, err = regexp.Compile(os.Args[1])
         }
+    
 
 	return err
 }
