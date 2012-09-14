@@ -73,8 +73,10 @@ func configure() (err error) {
 }
 
 func parseResults() {
+        results := 0
         for ; len(resultChannel) > 0 ; {
                 res := <-resultChannel
+                results++
                 fmt.Println(res.Path)
                 for _, line := range res.Results {
                         fmt.Printf("%d:%s\n", line.Lineno, line.Line)
@@ -82,5 +84,11 @@ func parseResults() {
                 if len(res.Results) > 0 {
                         fmt.Println("")
                 }
+        }
+
+        if results == 0 {
+                os.Exit(1)
+        } else {
+                os.Exit(0)
         }
 }
