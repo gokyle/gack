@@ -3,26 +3,26 @@ package main
 import (
 	"fmt"
 	"regexp"
-        "strings"
+	"strings"
 )
 
 // contains functions for including or excluding files by language
 
 func addFile(regex, filename string) string {
-        if len(regex) > 0 {
-                regex += "|"
-        }
-        re_string := fmt.Sprintf("(^%s$)", filename)
-        return regex + re_string
+	if len(regex) > 0 {
+		regex += "|"
+	}
+	re_string := fmt.Sprintf("(^%s$)", filename)
+	return regex + re_string
 }
 
 func addFiles(files string) *regexp.Regexp {
-        regex := ""
-        for _, file := range strings.Fields(files) {
-               regex = addFile(regex, file)
-        }
+	regex := ""
+	for _, file := range strings.Fields(files) {
+		regex = addFile(regex, file)
+	}
 
-        return regexp.MustCompile(regex)
+	return regexp.MustCompile(regex)
 }
 
 func addExtension(regex, ext string) string {
@@ -98,8 +98,8 @@ func initLanguages() {
 	addLanguage("vim", "vim")
 	addLanguage("xml", "xml dtd xsl xslt ent")
 	addLanguage("yaml", "yaml yml")
-        language_files["make"] = addFiles("Makefile")
-        language_files["projects"] = addFiles("README([.]\\w+)? LICENSE " +
-                "COPYRIGHT NOTICE NOTES TODO")
-        language_files["rake"] = addFiles("Rakefile")
+	language_files["make"] = addFiles("Makefile")
+	language_files["projects"] = addFiles("README([.]\\w+)? LICENSE " +
+		"COPYRIGHT NOTICE NOTES TODO")
+	language_files["rake"] = addFiles("Rakefile")
 }

@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-        "time"
+	"time"
 )
 
 var root = "."
@@ -20,7 +20,7 @@ var profiled = false
 func init() {
 	fileChannel = make(chan string, fileMax)
 	resultChannel = make(chan *Result, fileMax)
-        initLanguages()
+	initLanguages()
 }
 
 func main() {
@@ -36,11 +36,11 @@ func main() {
 		fmt.Println("[+] profiling enabled")
 	}
 
-        workers := make(chan int, numWorkers)
+	workers := make(chan int, numWorkers)
 	go func() {
 		for i := 0; i < numWorkers; i++ {
 			go fileScanner(workers)
-                        workers <- i
+			workers <- i
 		}
 	}()
 
@@ -53,17 +53,17 @@ func main() {
 		walkDone = true
 	}()
 
-        go parseResults()
-        
-                for ; !walkDone || len(fileChannel) > 0 ; {
-                        time.Sleep(1 * time.Millisecond)
-                }
-                close(fileChannel)
+	go parseResults()
 
-                for ; len(workers) > 0 ; {
-                        time.Sleep(1 * time.Millisecond)
-                }
-                close(resultChannel)
+	for !walkDone || len(fileChannel) > 0 {
+		time.Sleep(1 * time.Millisecond)
+	}
+	close(fileChannel)
+
+	for len(workers) > 0 || len(resultChannel) > 0 {
+		time.Sleep(1 * time.Millisecond)
+	}
+	close(resultChannel)
 
 }
 

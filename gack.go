@@ -25,18 +25,18 @@ func shouldIgnoreFile(path string) bool {
 		}
 	}
 
-        keep := false
+	keep := false
 
-        for _, langRegex := range language_files {
-            if matched := langRegex.MatchString(basename); matched {
-                    keep = true
-                    break
-            }
-        }
-        if keep {
-	        return false
-        }
-        return true
+	for _, langRegex := range language_files {
+		if matched := langRegex.MatchString(basename); matched {
+			keep = true
+			break
+		}
+	}
+	if keep {
+		return false
+	}
+	return true
 }
 
 func extendLine(line []byte, lineBytes []byte) []byte {

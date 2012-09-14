@@ -23,7 +23,7 @@ func fileScanner(workers chan int) {
 	for {
 		path, ok := <-fileChannel
 		if !ok {
-                        <-workers
+			<-workers
 			return
 		} else if shouldIgnoreFile(path) {
 			continue
@@ -76,7 +76,7 @@ func scanFile(path string) {
 			line = lineBytes
 		}
 
-		if query.Match(line) {
+		if matched := query.Match(line); matched {
 			result.Results = append(result.Results,
 				ResultLine{string(line), lineno})
 		}
@@ -85,8 +85,5 @@ func scanFile(path string) {
 
 	if len(result.Results) > 0 {
 		resultChannel <- result
-		file.Close()
-	} else {
-		file.Close()
 	}
 }
