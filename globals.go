@@ -1,28 +1,27 @@
 package main
 
+// constants and globals for the gack utility
 import (
 	"regexp"
 )
 
 var query *regexp.Regexp
+var root = "."
+var walkDone = false
 
+// profile vars
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+var memprofile = flag.String("memprofile", "", "write memory profile to this file")
+var profiled = false
+
+// control the number of works and files that we can open at once
 const fileMax = 512
-const numWorkers = 4
+const numWorkers = 512
 
+// channels for workers
 var fileChannel chan string    // stores the files that need to be scanned
 var resultChannel chan *Result // stores results
 
-type ResultLine struct {
-	Line   string
-	Lineno int
-}
-
-type Result struct {
-	Path    string
-	Results []ResultLine
-}
-
-// constants and globals for the gack utility
 var ignore_dirs = []string{
 	"^bzr$",            // Bazaar
 	"^cdv$",            // Codeville
@@ -45,13 +44,24 @@ var ignore_dirs = []string{
 	"^cover_db$",       // Devel::Cover
 	"^_build$",         // Module::Build
 }
-
-var ignore_files = []string{
-	"^[.].*\\w+[.]swp$",
-}
-
+var ignore_files = []string{}
 var language_files map[string]*regexp.Regexp
 
 // config vars
 var configFilesOnly bool
 var configFilesOnlyRegex string
+
+
+// types
+
+// ResultLine stores a single line of matching data.
+type ResultLine struct {
+	Line   string
+	Lineno int
+}
+
+// A result represents a file and any matches it has.
+type Result struct {
+	Path    string
+	Results []ResultLine
+}
