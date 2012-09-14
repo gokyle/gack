@@ -10,12 +10,16 @@ write as much Go as possible, I thought it would be an interesting project.
 
 ## Status
 `gack` currently supports the following flags:
+
+```
         -f          list files only
         -g query    list files that match the query
+```
 
 ## Immediate TODO
 * support language flags to search or exclude certain languages
 
 ## Bugs
 * `gack` uses the `filepath.Walk` function, which doesn't handle large
-directories well
+directories well.
+* `gack` is currently slower than `ack`.
