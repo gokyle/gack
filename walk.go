@@ -1,79 +1,92 @@
 package main
 
 import (
-        "bufio"
-        "io"
-        "log"
+	"bufio"
+	"io"
 	"os"
-        "regexp"
 	"path/filepath"
+	"regexp"
 )
 
 func walker(path string, info os.FileInfo, err error) error {
 	if info.Mode().IsDir() == false {
-                fileChannel <- path
+		fileChannel <- path
 	} else {
-                if shouldIgnoreDir(path) {
-                        return filepath.SkipDir
-                }
-        }
+		if shouldIgnoreDir(path) {
+			return filepath.SkipDir
+		}
+	}
 	return nil
 }
 
-func fileScanner() {
-        for {
-                path := <-fileChannel
-                if shouldIgnoreFile(path) {
-                        continue
-                } else if configFilesOnly && query.MatchString(path) {
-                        res := new(Result)
-                        res.Path = path
-                        resultChannel <- res
-                } else if !configFilesOnly {
-                        go scanFile(path)
-                }
-        }
+func fileScanner(workers chan int) {
+	for {
+		path, ok := <-fileChannel
+		if !ok {
+                        <-workers
+			return
+		} else if shouldIgnoreFile(path) {
+			continue
+		} else if configFilesOnly && query.MatchString(path) {
+			res := new(Result)
+			res.Path = path
+			resultChannel <- res
+		} else if !configFilesOnly {
+			go scanFile(path)
+		}
+	}
 }
 
 func scanFile(path string) {
-        file, err := os.Open(path)
+	file, err := os.Open(path)
 	if err != nil {
-		log.Println("[!] ReadConfig open: ", err)
+		if err.Error() == "too many open files" {
+			fileChannel <- path
+		}
 		return
 	}
 	defer file.Close()
 
 	buf := bufio.NewReader(file)
-        lineno := 0
-        result := new(Result)
-        result.Path = path
+	lineno := 0
+	result := new(Result)
+	result.Path = path
+	longLine := false
+	var line []byte
 
 	for {
 		err = nil
 
 		lineBytes, isPrefix, err := buf.ReadLine()
-                lineno++
+		lineno++
 		if io.EOF == err {
 			break
 		} else if err != nil {
-			log.Println("[!] ReadConfig read line: ", err)
-			return
+			break
 		} else if matched, _ := regexp.Match("\x00", lineBytes); matched {
-                        return
-                } else if isPrefix {
-			log.Println("[!] ReadConfig line unexpectedly long (",
-				path, ")")
-			return
+			break
+		} else if isPrefix {
+			line = extendLine(line, lineBytes)
+			longLine = true
+			continue
+		} else if longLine {
+			line = extendLine(line, lineBytes)
+			longLine = false
+		} else {
+			line = lineBytes
 		}
 
-                if query.Match(lineBytes) {
-                        result.Results = append(result.Results, 
-                                ResultLine{string(lineBytes), lineno})
-                }
-                         
-        }
+		if query.Match(line) {
+			result.Results = append(result.Results,
+				ResultLine{string(line), lineno})
+		}
 
-        if len(result.Results) > 0 {
-                resultChannel <- result
-        }
+	}
+
+	if len(result.Results) > 0 {
+		resultChannel <- result
+		file.Close()
+	} else {
+		file.Close()
+	}
 }

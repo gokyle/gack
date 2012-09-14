@@ -7,22 +7,41 @@ import (
 )
 
 func shouldIgnoreDir(path string) bool {
-        basename := filepath.Base(path)
+	basename := filepath.Base(path)
 	for _, ignore := range ignore_dirs {
 		if matched, _ := regexp.MatchString(ignore, basename); matched {
 			return true
 		}
 
 	}
-        return false
+	return false
 }
 
 func shouldIgnoreFile(path string) bool {
-        basename := filepath.Base(path)
-        for _, ignore := range ignore_files {
-                if matched, _ := regexp.MatchString(ignore, basename); matched {
-                        return true
-                }
+	basename := filepath.Base(path)
+	for _, ignore := range ignore_files {
+		if matched, _ := regexp.MatchString(ignore, basename); matched {
+			return true
+		}
+	}
+
+        keep := false
+
+        for _, langRegex := range language_files {
+            if matched := langRegex.MatchString(basename); matched {
+                    keep = true
+                    break
+            }
         }
-        return false
+        if keep {
+	        return false
+        }
+        return true
+}
+
+func extendLine(line []byte, lineBytes []byte) []byte {
+	for _, b := range lineBytes {
+		line = append(line, b)
+	}
+	return line
 }

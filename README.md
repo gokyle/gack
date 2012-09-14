@@ -15,3 +15,7 @@ write as much Go as possible, I thought it would be an interesting project.
 
 ## Immediate TODO
 * support language flags to search or exclude certain languages
+
+## Bugs
+* `gack` uses the `filepath.Walk` function, which doesn't handle large
+directories well

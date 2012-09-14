@@ -1,24 +1,25 @@
 package main
 
 import (
-        "regexp"
+	"regexp"
 )
 
 var query *regexp.Regexp
 
-const fileMax = 1024
+const fileMax = 512
 const numWorkers = 4
-var fileChannel chan string       // stores the files that need to be scanned
-var resultChannel chan *Result      // stores results
+
+var fileChannel chan string    // stores the files that need to be scanned
+var resultChannel chan *Result // stores results
 
 type ResultLine struct {
-        Line string
-        Lineno int
+	Line   string
+	Lineno int
 }
 
 type Result struct {
-	Path   string
-        Results []ResultLine
+	Path    string
+	Results []ResultLine
 }
 
 // constants and globals for the gack utility
@@ -45,13 +46,12 @@ var ignore_dirs = []string{
 	"^_build$",         // Module::Build
 }
 
-var ignore_files = []string {
-        "^[.].*\\w+[.]swp$",
+var ignore_files = []string{
+	"^[.].*\\w+[.]swp$",
 }
 
-var language_files map[string][]*regexp.Regexp
+var language_files map[string]*regexp.Regexp
 
 // config vars
 var configFilesOnly bool
 var configFilesOnlyRegex string
-
