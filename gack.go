@@ -41,8 +41,9 @@ func shouldIgnoreFile(path string) {
 }
 
 func extendLine(line []byte, lineBytes []byte) []byte {
+	tempLine := make([]byte, len(line)+len(lineBytes))
 	for _, b := range lineBytes {
-		line = append(line, b)
+		tempLine = append(tempLine, b)
 	}
-	return line
+	return tempLine
 }
