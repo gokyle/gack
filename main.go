@@ -14,6 +14,7 @@ import (
 func init() {
 	fileChannel = make(chan string, fileMax)
 	resultChannel = make(chan *Result, fileMax)
+	initIgnoreDirs()
 	initLanguages()
 }
 

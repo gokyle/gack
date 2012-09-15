@@ -24,7 +24,7 @@ const numWorkers = 512
 var fileChannel chan string    // stores the files that need to be scanned
 var resultChannel chan *Result // stores results
 
-var ignore_dirs = []string{
+var ignore_dir_strings = []string{
 	"^bzr$",            // Bazaar
 	"^cdv$",            // Codeville
 	"^~.dep$",          // Interface builder
@@ -46,6 +46,7 @@ var ignore_dirs = []string{
 	"^cover_db$",       // Devel::Cover
 	"^_build$",         // Module::Build
 }
+var ignore_dirs = []*regexp.Regexp{}
 var ignore_files = []string{}
 var language_files map[string]*regexp.Regexp
 

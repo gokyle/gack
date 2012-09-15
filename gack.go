@@ -6,10 +6,16 @@ import (
 	"regexp"
 )
 
+func initIgnoreDirs() {
+	for _, dir := range ignore_dir_strings {
+		ignore_dirs = append(ignore_dirs, regexp.MustCompile(dir))
+	}
+}
+
 func shouldIgnoreDir(path string) bool {
 	basename := filepath.Base(path)
 	for _, ignore := range ignore_dirs {
-		if matched, _ := regexp.MatchString(ignore, basename); matched {
+		if ignore.MatchString(basename) {
 			return true
 		}
 
@@ -26,7 +32,7 @@ func shouldIgnoreFile(path string) bool {
 	}
 
 	for _, langRegex := range language_files {
-		if matched := langRegex.MatchString(basename); matched {
+		if langRegex.MatchString(basename) {
 			return false
 		}
 	}
