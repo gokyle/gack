@@ -5,12 +5,12 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
 )
 
 func walker(path string, info os.FileInfo, err error) error {
 	if info.Mode().IsDir() == false {
-		fileChannel <- path
+		go shouldIgnoreFile(path)
+		return nil
 	} else {
 		if shouldIgnoreDir(path) {
 			return filepath.SkipDir
@@ -25,8 +25,6 @@ func fileScanner(workers chan int) {
 		if !ok {
 			<-workers
 			return
-		} else if shouldIgnoreFile(path) {
-			continue
 		} else if configFilesOnly && query.MatchString(path) {
 			res := new(Result)
 			res.Path = path
@@ -62,8 +60,6 @@ func scanFile(path string) {
 		if io.EOF == err {
 			break
 		} else if err != nil {
-			break
-		} else if matched, _ := regexp.Match("\x00", lineBytes); matched {
 			break
 		} else if isPrefix {
 			line = extendLine(line, lineBytes)

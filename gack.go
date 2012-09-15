@@ -23,20 +23,21 @@ func shouldIgnoreDir(path string) bool {
 	return false
 }
 
-func shouldIgnoreFile(path string) bool {
+func shouldIgnoreFile(path string) {
 	basename := filepath.Base(path)
 	for _, ignore := range ignore_files {
 		if matched, _ := regexp.MatchString(ignore, basename); matched {
-			return true
+			return
 		}
 	}
 
 	for _, langRegex := range language_files {
 		if langRegex.MatchString(basename) {
-			return false
+			fileChannel <- path
+			return
 		}
 	}
-	return true
+	return
 }
 
 func extendLine(line []byte, lineBytes []byte) []byte {

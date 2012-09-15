@@ -17,8 +17,8 @@ var memprofile = flag.String("memprofile", "", "write memory profile to this fil
 var profiled = false
 
 // control the number of works and files that we can open at once
-const fileMax = 512
-const numWorkers = 512
+const fileMax = 4096
+const numWorkers = fileMax
 
 // channels for workers
 var fileChannel chan string    // stores the files that need to be scanned

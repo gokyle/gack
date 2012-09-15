@@ -31,10 +31,12 @@ func initProfile() {
 func killProfile() {
 	log.Println("[-] profile stopped")
 	if *cpuprofile != "" {
+		log.Println("[-] cpu profile written to ", *cpuprofile)
 		pprof.StopCPUProfile()
 	}
 
 	if *memprofile != "" {
+		log.Println("[-] heap profile written to ", *memprofile)
 		pprof.WriteHeapProfile(f)
 		f.Close()
 	}
