@@ -11,13 +11,6 @@ import (
 
 // this file contains the frontend code for the gack utility
 
-func init() {
-	fileChannel = make(chan string, fileMax)
-	resultChannel = make(chan *Result, fileMax)
-	initIgnoreDirs()
-	initLanguages()
-}
-
 func main() {
 	if len(os.Args) == 1 {
 		usage()

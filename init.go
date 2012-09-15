@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-// contains functions for including or excluding files by language
-
 func addFile(regex, filename string) string {
 	if len(regex) > 0 {
 		regex += "|"
@@ -102,4 +100,11 @@ func initLanguages() {
 	language_files["projects"] = addFiles("README([.]\\w+)? LICENSE " +
 		"COPYRIGHT NOTICE NOTES TODO")
 	language_files["rake"] = addFiles("Rakefile")
+}
+
+func init() {
+	fileChannel = make(chan string, fileMax)
+	resultChannel = make(chan *Result, fileMax)
+	initIgnoreDirs()
+	initLanguages()
 }
