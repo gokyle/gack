@@ -23,4 +23,5 @@ write as much Go as possible, I thought it would be an interesting project.
 ## Bugs
 * `gack` uses the `filepath.Walk` function, which doesn't handle large
 directories well. consequently, 
-* `gack` is currently slower than `ack`.
+* `gack` is currently slower than `ack`. I suspect a large part of this
+is the maturity of Perl's regular expression support compared to Go's.
