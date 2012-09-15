@@ -3,6 +3,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -79,11 +80,13 @@ func fileScanner(workers chan int) {
 }
 
 func scanFile(path string) {
+	fmt.Println("[-] path: ", path)
 	file, err := os.Open(path)
 	if err != nil {
 		if err.Error() == "too many open files" {
 			fileChannel <- path
 		}
+		fmt.Println("[-] error")
 		return
 	}
 	defer file.Close()
@@ -115,7 +118,7 @@ func scanFile(path string) {
 			line = lineBytes
 		}
 
-		if matched := query.Match(line); matched {
+		if query.Match(line) {
 			result.Results = append(result.Results,
 				ResultLine{string(line), lineno})
 		}
