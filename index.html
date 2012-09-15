@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>gack by gokyle</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>gack</h1>
+        <p>A Go clone of the ack search tool.</p>
+
+        <p class="view"><a href="https://github.com/gokyle/gack">View the Project on GitHub <small>gokyle/gack</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/gokyle/gack/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/gokyle/gack/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/gokyle/gack">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Introduction</h2>
+
+<p>gack is a Go port of the ack code searching utility. It will eventually
+support the same interface as the original ack.</p>
+
+<h2>Background</h2>
+
+<p>I started working on <code>gack</code> when I saw a 
+<a href="https://github.com/ggreer/the_silver_searcher">port of ack to the C language</a>. 
+As I am currently working to learn Go, and the way for me to do that is to 
+write as much Go as possible, I thought it would be an interesting project.</p>
+
+<h2>Status</h2>
+
+<p><code>gack</code> currently supports the following flags:</p>
+
+<pre><code>        -f          list files only
+        -g query    list files that match the query
+</code></pre>
+
+<h2>Immediate TODO</h2>
+
+<ul>
+<li>support language flags to search or exclude certain languages</li>
+</ul><h2>Bugs</h2>
+
+<ul>
+<li>
+<code>gack</code> uses the <code>filepath.Walk</code> function, which doesn't handle large
+directories well.</li>
+<li>
+<code>gack</code> is currently slower than <code>ack</code>.</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/gokyle">gokyle</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
