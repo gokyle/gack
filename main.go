@@ -19,10 +19,6 @@ func init() {
 }
 
 func main() {
-	if len(os.Args) == 1 {
-		usage()
-	}
-
 	if err := configure(); err != nil {
 		fmt.Println("[!] ", err)
 		os.Exit(1)
@@ -67,17 +63,17 @@ func main() {
 	os.Exit(exitStatus)
 }
 
-func usage() {
-	fmt.Printf("usage: %s <query>\n", filepath.Base(os.Args[0]))
-	os.Exit(1)
-}
-
 func configure() (err error) {
 	flag.BoolVar(&configFilesOnly, "f", false,
 		"Only list source files.")
 	flag.StringVar(&configFilesOnlyRegex, "g", "",
 		"Only list source files that match the specified regex.")
 	flag.Parse()
+
+	if len(os.Args) == 1 {
+		flag.Usage()
+		os.Exit(1)
+	}
 
 	if configFilesOnlyRegex != "" {
 		query = regexp.MustCompile(configFilesOnlyRegex)
