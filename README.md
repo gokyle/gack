@@ -18,6 +18,7 @@ write as much Go as possible, I thought it would be an interesting project.
 
 ## Immediate TODO
 * optimise to increase speed
+* add support for selecting / excluding languages
 
 ## Bugs
 * `gack` uses the `filepath.Walk` function, which doesn't handle large
